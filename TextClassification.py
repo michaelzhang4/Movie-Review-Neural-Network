@@ -20,7 +20,13 @@ reverse_word_index = dict([(value, key) for (key, value) in word_index.items()])
 
 # decodes integer-encoded reviews into english
 def decode_review(text):
-    return " ".join([reverse_word_index.get(i, "?") for i in text])
+    review = []
+    for i in text:
+        word = reverse_word_index.get(i,"?")
+        if word != "<PAD>":
+            review.append(word)
+    return " ".join(review)
+    # return " ".join([reverse_word_index.get(i, "?") for i in text])
 
 # encodes english-encoded reviews into integers
 def review_encode(review):
