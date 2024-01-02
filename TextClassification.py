@@ -68,30 +68,29 @@ test_data = keras.preprocessing.sequence.pad_sequences(test_data, value=word_ind
 
 # model = keras.Sequential()
 # model.add(keras.layers.Embedding(88000, 16))  # establishes dense vectors of 16 dimensions for each word
-# model.add(
-#     keras.layers.GlobalAveragePooling1D())  # finds the average of each dimension of all vectors and returns as a list of 16 averages
+# model.add(keras.layers.GlobalAveragePooling1D())  # finds the average of each dimension of all vectors and returns as a list of 16 averages
 # model.add(keras.layers.Dense(16,
 #                              activation="relu"))  # makes negative components in each vector 0 and computes positive components
 # model.add(keras.layers.Dense(1,
 #                              activation="sigmoid"))  # returns a value between 0 and 1 indicating positive or negative review
-#
+
 # model.summary()     # prints summary of model, layers and parameters
-#
+
 # model.compile(optimizer="adam", loss="binary_crossentropy",
 #               metrics=["accuracy"])   # configure training related settings and display accuracy as output
-#
+
 # val_data = train_data[:10000]   # splitting training data into validation and training sets
 # training_data = train_data[10000:]
-#
+
 # val_labels = train_labels[:10000]   # splitting training labels into validation and training sets
 # training_labels = train_labels[10000:]
-#
+
 # model.fit(training_data, training_labels, epochs=40, batch_size=512,
 #           validation_data=(val_data, val_labels), verbose=1)    # fitting the model using 40 runs,
 # # each with a data input size of 512 taken from training data and checked against validation data to prevent overfitting
-#
+
 # results = model.evaluate(test_data, test_labels)
-#
+
 # print(results)
 
 # model.save("model.h5")    # saves model so model doesn't need to be trained every time the program is run
@@ -110,12 +109,11 @@ with open("review.txt") as f:
         predict = model.predict(encode)
         print("\nReview taken from internet: ")
         print("<START> " + line)
-        print("Prediction: " + str(aggregate_predict(predict)) + "\nActual: 1")
+        print("Prediction: " + str(predict))
 
+predict = model.predict(test_data)
 # prints out 10 randoms reviews, with the prediction and the actual result
 for counter in range(0, 10):
     ran = random.randint(0, 25000)
-    test_review = test_data[ran]
-    predict = model.predict([test_review])
-    print("\nReview " + str(counter + 1) + ": \n" + decode_review(test_review))
-    print("Prediction: " + str(aggregate_predict(predict)) + "\nActual: " + str(test_labels[ran]))
+    print("\nReview " + str(counter + 1) + ": \n" + decode_review(test_data[ran]))
+    print("Prediction: " + str(predict[ran]) + "\nActual: " + str(test_labels[ran]))
