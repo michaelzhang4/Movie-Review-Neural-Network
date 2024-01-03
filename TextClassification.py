@@ -1,6 +1,13 @@
+from cgitb import reset
 from tensorflow import keras
 import numpy as np
 import random
+import tkinter as tk
+
+RED = '\033[31m'
+GREEN = '\033[32m'
+YELLOW = '\033[33m'
+RESET = '\033[0m'
 
 data = keras.datasets.imdb  # import imdb reviews data with positive negative review labels
 
@@ -41,7 +48,6 @@ def aggregate_predict(predict):
         return 1
     else:
         return 0
-
 
 # tried but didn't work, use keras for preprocessing instead
 # def normalise_data_length(data_input, length):
@@ -107,13 +113,36 @@ with open("review.txt") as f:
         encode = keras.preprocessing.sequence.pad_sequences([encode], value=word_index["<PAD>"], padding="post",
                                                             maxlen=250)
         predict = model.predict(encode)
-        print("\nReview taken from internet: ")
+        print(YELLOW+"\nReview taken from internet: "+RESET)
         print("<START> " + line)
-        print("Prediction: " + str(predict))
+        if predict[0][0]>0.5:
+            print(GREEN+"Prediction: "+RESET+str(round(predict[0][0],2))+"%")
+        else:
+            print(RED+"Prediction: "+RESET+str(round(predict[0][0],2))+"%")
 
 predict = model.predict(test_data)
-# prints out 10 randoms reviews, with the prediction and the actual result
-for counter in range(0, 10):
+
+counter = 1 
+
+def on_key():
     ran = random.randint(0, 25000)
-    print("\nReview " + str(counter + 1) + ": \n" + decode_review(test_data[ran]))
-    print("Prediction: " + str(predict[ran]) + "\nActual: " + str(test_labels[ran]))
+    print(YELLOW+"\nReview: "+RESET+"\n" + decode_review(test_data[ran]))
+    if test_labels[ran]>0.5:
+        label=GREEN+"Positive"+RESET
+    else:
+        label=RED+"Negative"+RESET
+    if predict[ran][0]>0.5:
+        label2=GREEN+"Positive"+RESET
+    else:
+        label2=RED+"Negative"+RESET
+
+    print("\nPrediction: " + label2 + " " + str(round(predict[ran][0]*100,2)) +
+        "%\nActual: " + label)
+
+root = tk.Tk()
+frame = tk.Frame(root, width=200, height=200)
+frame.bind('<Right>', lambda e: on_key())
+frame.bind('<e>', lambda e: exit())
+frame.pack()
+frame.focus_set()
+root.mainloop()
