@@ -116,9 +116,9 @@ with open("review.txt") as f:
         print(YELLOW+"\nReview taken from internet: "+RESET)
         print("<START> " + line)
         if predict[0][0]>0.5:
-            print(GREEN+"Prediction: "+RESET+str(round(predict[0][0],2))+"%")
+            print(GREEN+"Positive Prediction: "+RESET+str(round(predict[0][0]*100,2))+"%")
         else:
-            print(RED+"Prediction: "+RESET+str(round(predict[0][0],2))+"%")
+            print(RED+"Negative Prediction: "+RESET+str(round(predict[0][0]*100,2))+"%")
 
 predict = model.predict(test_data)
 
